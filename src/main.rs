@@ -4,7 +4,7 @@ use axum::{
     extract::{self, Multipart, Request}, response::{Html, IntoResponse}, routing::{get, post}, Router
 };
 use tower_http::services::ServeDir;
-use multer::web::extract_image;
+use multer::{storage::Disk::{save_to_disk, store}, web::extract_image};
 
 #[tokio::main]
 async fn main() {
@@ -26,5 +26,12 @@ async fn index(req: Request) -> Html<String>{
 
 // #[axum::debug_handler]
 async fn upload(mut multipart: Multipart)-> impl IntoResponse{
-    let _ = extract_image(multipart).await;
+    let file = extract_image(multipart).await.unwrap();
+    let file = store(Some("media".to_string()), file).await;
+
+    if let Some(f) = file{
+
+        println!("going to save to disk...");
+        save_to_disk(f).await;
+    }
 }

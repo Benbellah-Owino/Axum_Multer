@@ -1,5 +1,7 @@
 use std::path::Path;
 
+use Disk::store;
+
 // region:      --- MODULES
 pub mod Disk;
 // endregion:   --- MODULES
@@ -18,6 +20,6 @@ pub struct Meta{
 
 async fn storage(meta: Meta){
 if meta.storage == StorageType::Disk{
-        Disk::store(meta.destination);
+       //store(destination, file)
     }
 }
