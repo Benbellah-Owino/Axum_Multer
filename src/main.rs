@@ -1,7 +1,7 @@
 use rs_multer::html::read_html_from_file;
 use tokio::net::TcpListener;
 use axum::{
-    extract::{self, Multipart, Request}, response::{Html, IntoResponse}, routing::{get, post}, Router
+    extract::{self, DefaultBodyLimit, Multipart, Request}, response::{Html, IntoResponse}, routing::{get, post}, Router
 };
 use tower_http::services::ServeDir;
 use multer::{storage::Disk::{save_to_disk, store}, web::extract_image};
@@ -10,7 +10,9 @@ use multer::{storage::Disk::{save_to_disk, store}, web::extract_image};
 async fn main() {
     let app = Router::new()
         .route("/", get(index))
-        .route("/upload",  post(upload));
+        .route("/upload",  post(upload))
+        .layer(DefaultBodyLimit::disable())
+        ;
     
     let listener = TcpListener::bind("0.0.0.0:5000").await.unwrap();
     

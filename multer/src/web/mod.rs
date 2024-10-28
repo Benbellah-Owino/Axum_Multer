@@ -21,6 +21,9 @@ pub struct MultField {
 impl MultField {
     pub fn new() {}
 
+    ///
+    /// TIP: TO be able to upload files bigger that 2mb make sure to disable the default file limit in your router
+    /// 
     pub async fn from_field(mut field: Field<'_>) -> MultField {
         eprintln!("{:#?}", &field);
         let content_type = field.content_type().unwrap().to_string();
@@ -40,6 +43,7 @@ impl MultField {
                 mbs,
                 count
             );
+            
             data.extend_from_slice(&chunk);
         }
 
